@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Certiport DB </title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Certiport DB</h1>
+      
+        </div>
+      </div>
+      <button id="btnReset" class="btn ghost" type="button" title="Revino la meniu">Reset</button>
+    </header>
+
+    <!-- SCREEN: MENU -->
+    <main id="screenMenu" class="card">
+      <h2>Alege modulul</h2>
+      <div class="grid" id="moduleGrid"></div>
+
+      <hr class="sep" />
+
+      <h2>Examen (random din toate modulele)</h2>
+      <div class="row">
+        <label class="field">
+          <span>Număr întrebări</span>
+          <input id="examCount" type="number" min="5" max="50" value="25" />
+        </label>
+
+        <label class="field">
+          <span>Amestecă opțiunile</span>
+          <select id="shuffleOptions">
+            <option value="yes" selected>Da</option>
+            <option value="no">Nu</option>
+          </select>
+        </label>
+
+        <button id="btnStartExam" class="btn" type="button">Începe examenul</button>
+      </div>
+
+      <p class="hint">
+      
+      </p>
+    </main>
+
+    
+    <main id="screenQuiz" class="card hidden">
+      <div class="quizTop">
+        <div>
+          <h2 id="quizTitle">Modul</h2>
+          <p class="sub" id="quizMeta">Întrebarea 1 / N</p>
+        </div>
+        <div class="pill" id="progressPill">0%</div>
+      </div>
+
+      <div class="qbox">
+        <div class="qnum" id="qIndex">1</div>
+        <div class="qtext" id="qText">Text întrebare</div>
+      </div>
+
+      <div id="options" class="options"></div>
+
+      <div class="nav">
+        <button id="btnPrev" class="btn ghost" type="button">Înapoi</button>
+        <button id="btnNext" class="btn" type="button">Următor</button>
+      </div>
+
+      <div class="footerNote">
+        <span id="saveNote">Răspunsurile se țin în memorie (pe sesiune).</span>
+      </div>
+    </main>
+
+    <!-- SCREEN: RESULT -->
+    <main id="screenResult" class="card hidden">
+      <div class="resultTop">
+        <div>
+          <h2 id="resultTitle">Rezultat</h2>
+          <p class="sub" id="resultSubtitle">Detalii</p>
+        </div>
+        <div class="score">
+          <div class="scoreBig" id="scoreBig">0%</div>
+          <div class="scoreSmall" id="scoreSmall">0 / 0 corecte</div>
+        </div>
+      </div>
+
+      <div class="resultActions">
+        <button id="btnReview" class="btn ghost" type="button">Arată greșelile</button>
+        <button id="btnBackMenu" class="btn" type="button">Înapoi la meniu</button>
+      </div>
+
+      <div id="review" class="review hidden"></div>
+    </main>
+
+    <footer class="foot">
+      <span>© ITSTEP </span>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
