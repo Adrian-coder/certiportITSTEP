@@ -3,38 +3,50 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Certiport DB </title>
+  <title>Certiport DB - Pregătire</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div id="langControls" style="text-align: right; margin-bottom: 10px;">
-  <button id="btnLangRo" class="btn sm">RO</button>
-  <button id="btnLangEn" class="btn sm ghost">EN</button>
-</div>
+
   <div class="wrap">
+    
     <header class="top">
       <div class="brand">
         <div class="logo" aria-hidden="true"></div>
         <div>
           <h1>Certiport DB</h1>
-      
         </div>
       </div>
-      <button id="btnReset" class="btn ghost" type="button" title="Revino la meniu">Acasa</button>
+      
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <div id="langControls">
+          <button id="btnLangRo" class="btn sm">RO</button>
+          <button id="btnLangEn" class="btn sm ghost">EN</button>
+        </div>
+        <button id="btnReset" class="btn ghost" type="button" title="Revino la meniu">Acasă</button>
+      </div>
     </header>
 
- 
     <main id="screenMenu" class="card">
-      <h2>Alege modulul</h2>
+      
+      <div class="menu-header" style="text-align: center; margin-bottom: 25px;">
+        <h2 style="margin-bottom: 10px; font-size: 1.2rem; color: #555;">Date Elev</h2>
+        <input type="text" id="studentNameInput" placeholder="Introduceți Numele și Prenumele" 
+               style="padding: 12px; font-size: 16px; width: 100%; max-width: 400px; border: 2px solid #3498db; border-radius: 8px; text-align: center;">
+      </div>
+
+      <hr class="sep" />
+
+      <h2>Alege modulul de studiu</h2>
       <div class="grid" id="moduleGrid"></div>
 
       <hr class="sep" />
 
-      <h2>Examen (random din toate modulele)</h2>
+      <h2>Simulare Examen (Random)</h2>
       <div class="row">
         <label class="field">
           <span>Număr întrebări</span>
-          <input id="examCount" type="number" min="5" max="50" value="25" />
+          <input id="examCount" type="number" min="5" max="100" value="35" />
         </label>
 
         <label class="field">
@@ -45,15 +57,10 @@
           </select>
         </label>
 
-        <button id="btnStartExam" class="btn" type="button">Începe examenul</button>
+        <button id="btnStartExam" class="btn primary" type="button">Începe Examenul</button>
       </div>
-
-      <p class="hint">
-      
-      </p>
     </main>
 
-    
     <main id="screenQuiz" class="card hidden">
       <div class="quizTop">
         <div>
@@ -74,13 +81,8 @@
         <button id="btnPrev" class="btn ghost" type="button">Înapoi</button>
         <button id="btnNext" class="btn" type="button">Următor</button>
       </div>
-
-      <div class="footerNote">
-        <span id="saveNote">Răspunsurile se țin în memorie (pe sesiune).</span>
-      </div>
     </main>
 
-    <!-- SCREEN: RESULT -->
     <main id="screenResult" class="card hidden">
       <div class="resultTop">
         <div>
@@ -102,7 +104,7 @@
     </main>
 
     <footer class="foot">
-      <span>© ITSTEP </span>
+      <span>© ITSTEP - Pregătire Certiport</span>
     </footer>
   </div>
 

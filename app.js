@@ -1,4 +1,15 @@
+/* =========================================
+   1. CONFIGURĂRI SI DATE
+   ========================================= */
 
+const $ = (sel) => document.querySelector(sel);
+
+// --- LINK-UL TĂU NGROK ---
+// Actualizează acest link dacă repornești ngrok și se schimbă domeniul
+const SERVER_URL = "https://ethyl-nongrained-patti.ngrok-free.dev"; 
+// -------------------------
+
+// --- DATE ROMÂNĂ (Sursa completă) ---
 const RO_DATA = {
   design: [
     { q: "Datele într-o bază de date relațională sunt stocate în:", options: ["Tabele","Interogări","Tipuri de date","Proceduri stocate"], a: 0 },
@@ -309,7 +320,7 @@ const RO_DATA = {
   ]
 };
 
-
+// --- ENGLEZĂ (Complete) ---
 const EN_DATA = {
   design: [
     { q: "Data in a relational database is stored in:", options: ["Tables","Queries","Data types","Stored procedures"], a: 0 },
@@ -619,6 +630,8 @@ const EN_DATA = {
   ]
 };
 
+// --- RESTUL LOGICII APLICAȚIEI ---
+
 const MODULE_TITLES = {
   ro: {
     design: "1. Proiectarea Bazei de Date",
@@ -636,22 +649,16 @@ const MODULE_TITLES = {
   }
 };
 
-
-
-const $ = (sel) => document.querySelector(sel);
-
-// Starea globală
 const state = {
-  lang: "ro", // "ro" sau "en"
+  lang: "ro",
   mode: "module",
   moduleId: null,
   title: "",
-  questions: [], // Lista curentă de întrebări
+  questions: [],
   idx: 0,
   answers: [],            
 };
 
-// Elemente UI
 const ui = {
   menu: $("#screenMenu"),
   quiz: $("#screenQuiz"),
@@ -685,8 +692,6 @@ const ui = {
   btnLangEn: $("#btnLangEn")
 };
 
-
-/* --- Funcții Utilitare --- */
 function shuffle(arr){
   const a = arr.slice();
   for(let i=a.length-1;i>0;i--){
@@ -710,7 +715,6 @@ function sameSet(a, b){
   return true;
 }
 
-/* --- Gestionare Limbă --- */
 function setLanguage(lang) {
   state.lang = lang;
   
@@ -726,11 +730,9 @@ function setLanguage(lang) {
     ui.btnLangRo.classList.remove("selected-lang");
   }
 
- 
   if(!ui.menu.classList.contains("hidden")) {
     buildMenu();
   } else {
-
     alert(lang === "ro" ? "Limba se va schimba la următorul test." : "Language will change on the next test.");
   }
 }
@@ -738,14 +740,12 @@ function setLanguage(lang) {
 ui.btnLangRo.addEventListener("click", () => setLanguage("ro"));
 ui.btnLangEn.addEventListener("click", () => setLanguage("en"));
 
-
 function buildMenu(){
   ui.moduleGrid.innerHTML = "";
   const titles = MODULE_TITLES[state.lang];
   const keys = Object.keys(titles);
 
   keys.forEach(key => {
-    // Luăm numărul de întrebări din setul RO (sursa de adevăr)
     const count = RO_DATA[key].length;
     
     const btn = document.createElement("button");
@@ -767,22 +767,24 @@ function showScreen(name){
   if(name === "result") ui.result.classList.remove("hidden");
 }
 
-
-/* --- Start Modul --- */
 function startModule(moduleId){
+  const nume = $("#studentNameInput").value;
+  if(!nume || nume.trim().length < 3) {
+    alert("Te rog introdu Numele și Prenumele înainte de a începe!");
+    return;
+  }
+
   state.mode = "module";
   state.moduleId = moduleId;
   state.title = MODULE_TITLES[state.lang][moduleId];
 
-  // Logică de fallback: Dacă suntem pe EN dar nu avem întrebarea tradusă, luăm RO
   const sourceRO = RO_DATA[moduleId];
   const sourceEN = EN_DATA[moduleId] || [];
 
   state.questions = sourceRO.map((qRO, idx) => {
-    let finalQ = qRO; // Implicit RO
+    let finalQ = qRO; 
     
     if (state.lang === 'en') {
-      // Încercăm să găsim echivalentul EN la același index
       if (sourceEN[idx]) {
         finalQ = sourceEN[idx];
       }
@@ -790,7 +792,7 @@ function startModule(moduleId){
     
     return {
       ...finalQ,
-      meta: { moduleId, originalIndex: idx } // Păstrăm referința
+      meta: { moduleId, originalIndex: idx } 
     };
   });
 
@@ -801,14 +803,17 @@ function startModule(moduleId){
   renderQuestion();
 }
 
-
-/* --- Start Examen --- */
 function startExam(){
+  const nume = $("#studentNameInput").value;
+  if(!nume || nume.trim().length < 3) {
+    alert("Te rog introdu Numele și Prenumele înainte de a începe!");
+    return;
+  }
+
   state.mode = "exam";
   state.moduleId = null;
   state.title = (state.lang === "ro") ? "Examen (random)" : "Exam (random)";
 
-  // Colectăm TOATE întrebările disponibile
   let allQs = [];
   const keys = Object.keys(RO_DATA);
   
@@ -830,7 +835,6 @@ function startExam(){
     allQs = allQs.concat(mapped);
   });
 
-  // Selectăm N întrebări random
   const totalAvailable = allQs.length;
   let n = parseInt(ui.examCount.value, 10);
   if(Number.isNaN(n)) n = 25;
@@ -839,16 +843,13 @@ function startExam(){
   const picked = shuffle(allQs).slice(0, n);
   const doShuffle = (ui.shuffleOptions.value === "yes");
 
-  // Amestecăm opțiunile dacă e selectat
   state.questions = picked.map(q => {
     if(!doShuffle) return q;
 
-    // Amestecare opțiuni
     const indexed = q.options.map((txt, i) => ({ txt, i }));
     const mixed = shuffle(indexed);
     const newOptions = mixed.map(x => x.txt);
 
-    // Recalculare răspuns corect (index)
     let newA;
     if(Array.isArray(q.a)){
       newA = q.a.map(oldIdx => mixed.findIndex(x => x.i === oldIdx));
@@ -866,8 +867,6 @@ function startExam(){
   renderQuestion();
 }
 
-
-/* --- Afișare Întrebare --- */
 function renderQuestion(){
   const q = state.questions[state.idx];
   const total = state.questions.length;
@@ -912,7 +911,7 @@ function renderQuestion(){
       } else {
         state.answers[state.idx] = i;
       }
-      renderQuestion(); // Re-render pt update vizual
+      renderQuestion();
     };
 
     div.addEventListener("click", pick);
@@ -923,14 +922,12 @@ function renderQuestion(){
     ui.options.appendChild(div);
   });
 
-  // Butoane navigare
   ui.btnPrev.disabled = (state.idx === 0);
   ui.btnNext.textContent = (state.idx === total-1) 
     ? (lang === "ro" ? "Finalizează" : "Finish") 
     : (lang === "ro" ? "Următor" : "Next");
 }
 
-/* --- Navigare --- */
 ui.btnPrev.addEventListener("click", ()=>{
   if(state.idx > 0){
     state.idx--;
@@ -948,8 +945,6 @@ ui.btnNext.addEventListener("click", ()=>{
   }
 });
 
-
-/* --- Rezultate --- */
 function isCorrect(user, correct){
   if(Array.isArray(correct)){
     if(!Array.isArray(user)) return false;
@@ -972,6 +967,30 @@ function calcScore(){
 function showResult(){
   const s = calcScore();
   const lang = state.lang;
+  const numeElev = $("#studentNameInput").value || "Anonim";
+
+  // --- TRIMITERE DATE CĂTRE SERVER (PYTHON) ---
+  fetch(SERVER_URL + "/salveaza-nota", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+          nume: numeElev,
+          scor: s.correct,
+          total: s.total,
+          procent: s.percent
+      })
+  })
+  .then(response => {
+      if(response.ok) {
+          console.log("✅ Notă salvată cu succes!");
+      } else {
+          console.error("❌ Eroare server:", response.status);
+      }
+  })
+  .catch(error => {
+      console.error("❌ Eroare rețea (Serverul Python e oprit?):", error);
+  });
+  // ----------------------------------------
 
   ui.resultTitle.textContent = (state.mode === "exam") 
     ? (lang === "ro" ? "Rezultat Examen" : "Exam Result")
